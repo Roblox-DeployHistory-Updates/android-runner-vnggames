@@ -1,0 +1,19 @@
+name: Google Play Action Runner
+
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  run-play-tool:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare Play Tool
+        run: |
+          curl -L "$PLAY_DL" -o play-linux.zip
+          unzip -o play-linux.zip
+          chmod +x play
+        env:
+          PLAY_DL: ${{ env.PLAY_DL }}
