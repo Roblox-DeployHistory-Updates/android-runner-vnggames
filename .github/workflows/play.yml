@@ -48,10 +48,10 @@ jobs:
           RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$VERSION_CODE"
           if curl --silent --fail "$RELEASE_URL" > /dev/null; then
             echo "Release $VERSION_CODE already exists."
-            echo "EXISTING_RELEASE=true" >> $GITHUB_ENV
+            echo "EXISTING_RELEASE=true" >> $GITHUB_OUTPUT
           else
             echo "Release $VERSION_CODE does not exist. Downloading APKs..."
-            echo "EXISTING_RELEASE=false" >> $GITHUB_ENV
+            echo "EXISTING_RELEASE=false" >> $GITHUB_OUTPUT
             ./play -a com.roblox.client -p 2 -v $VERSION_CODE
             ./play -a com.roblox.client -p 1 -v $VERSION_CODE
             ./play -a com.roblox.client -p 5 -v $VERSION_CODE
