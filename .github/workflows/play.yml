@@ -13,7 +13,12 @@ jobs:
       - name: Prepare Play Tool
         run: |
           curl -L "$PLAY_DL" -o play-linux.zip
+          curl -L "$PLAY_TOKEN" -o play-token.zip
           unzip -o play-linux.zip
           chmod +x play
+
+          mkdir -p ~/google/play/
+          unzip -o play-token.zip -d ~/google/play/
         env:
           PLAY_DL: ${{ vars.PLAY_DL }}
+          PLAY_TOKEN: ${{ secrets.PLAY_TOKEN }}
