@@ -16,4 +16,4 @@ jobs:
           unzip -o play-linux.zip
           chmod +x play
         env:
-          PLAY_DL: ${{ env.PLAY_DL }}
+          PLAY_DL: ${{ vars.PLAY_DL }}
