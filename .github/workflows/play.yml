@@ -29,6 +29,7 @@ jobs:
         id: check-release
         run: |
           APP_OUTPUT=$(./play -a com.roblox.client -p 2)
+          APP_OUTPUT=$(echo "$APP_OUTPUT" | awk '/com.roblox.client/ {found=1} found')
           echo "$APP_OUTPUT"
 
           # Parse version code and version name
@@ -59,6 +60,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.check-release.outputs.VERSION_CODE }}
-          releaseName: "${{ steps.check-release.outputs.VERSION_NAME }} (${{ steps.check-release.outputs.VERSION_CODE }})"
+          name: "${{ steps.check-release.outputs.VERSION_NAME }} (${{ steps.check-release.outputs.VERSION_CODE }})"
           body: ${{ steps.check-release.outputs.APP_OUTPUT }}
-          files: ./*.apk
+          artifacts: ./*.apk
