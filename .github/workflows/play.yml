@@ -48,15 +48,17 @@ jobs:
           RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$VERSION_CODE"
           if curl --silent --fail "$RELEASE_URL" > /dev/null; then
             echo "Release $VERSION_CODE already exists."
+            echo "EXISTING_RELEASE=true" >> $GITHUB_ENV
           else
             echo "Release $VERSION_CODE does not exist. Downloading APKs..."
+            echo "EXISTING_RELEASE=false" >> $GITHUB_ENV
             ./play -a com.roblox.client -p 2 -v $VERSION_CODE
             ./play -a com.roblox.client -p 1 -v $VERSION_CODE
             ./play -a com.roblox.client -p 5 -v $VERSION_CODE
           fi
 
       - name: Create release and upload APKs
-        if: steps.check-release.outputs.VERSION_CODE != ''
+        if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.check-release.outputs.VERSION_CODE }}
@@ -65,7 +67,7 @@ jobs:
           artifacts: ./*.apk
 
       - name: Append row to Google Sheet
-        if: steps.check-release.outputs.VERSION_CODE != ''
+        if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
         run: |
           npm install googleapis
           node append2sheets.js
