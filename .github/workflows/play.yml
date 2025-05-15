@@ -29,7 +29,7 @@ jobs:
         id: check-release
         run: |
           APP_OUTPUT=$(./play -a com.roblox.client -p 2)
-          APP_OUTPUT=$(echo "$APP_OUTPUT" | awk '/^com.roblox.client/ {found=1} found')
+          APP_OUTPUT=$(echo "$APP_OUTPUT" | awk '/downloads/ {found=1} found')
           echo "$APP_OUTPUT"
 
           # Parse version code and version name
