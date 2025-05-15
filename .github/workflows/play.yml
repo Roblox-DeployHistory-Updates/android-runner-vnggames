@@ -37,6 +37,10 @@ jobs:
           echo "version code: $VERSION_CODE"
           echo "version name: $VERSION_NAME"
 
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "APP_OUTPUT=$APP_OUTPUT" >> $GITHUB_ENV
+
           # Check if release exists
           RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$VERSION_CODE"
           if curl --silent --fail "$RELEASE_URL" > /dev/null; then
@@ -49,10 +53,10 @@ jobs:
           fi
 
       - name: Create release and upload APKs
-        if: steps.check-release.outputs.VERSION_CODE != ''
+        if: env.VERSION_CODE != ''
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.check-release.outputs.VERSION_CODE }}
-          releaseName: "${{ steps.check-release.outputs.VERSION_NAME }} (${{ steps.check-release.outputs.VERSION_CODE }})"
-          body: ${ steps.check-release.outputs.APP_OUTPUT }
+          tag: ${{ env.VERSION_CODE }}
+          releaseName: "${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})"
+          body: ${{ env.APP_OUTPUT }}
           files: ./*.apk
