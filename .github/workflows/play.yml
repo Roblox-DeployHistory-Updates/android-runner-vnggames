@@ -63,3 +63,12 @@ jobs:
           name: "${{ steps.check-release.outputs.VERSION_NAME }} (${{ steps.check-release.outputs.VERSION_CODE }})"
           body: ${{ steps.check-release.outputs.APP_OUTPUT }}
           artifacts: ./*.apk
+
+      - name: Append row to Google Sheet
+        if: steps.check-release.outputs.VERSION_CODE != ''
+        run: |
+          npm install googleapis
+          node append2sheets.js
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          APP_OUTPUT: ${{ steps.check-release.outputs.APP_OUTPUT }}
