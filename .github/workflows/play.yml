@@ -35,11 +35,11 @@ jobs:
           # Parse version code and version name
           VERSION_CODE=$(echo "$APP_OUTPUT" | grep "version code:" | awk '{print $3}')
           VERSION_NAME=$(echo "$APP_OUTPUT" | grep "version name:" | awk '{print $3}')
-          echo "version code: $VERSION_CODE"
-          echo "version name: $VERSION_NAME"
+          UPDATED_ON=$(echo "$APP_OUTPUT" | grep "updated on:" | awk '{print $3, $4, $5}')
 
           echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_OUTPUT
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "UPDATED_ON=$UPDATED_ON" >> $GITHUB_OUTPUT
           echo "APP_OUTPUT<<EOF" >> $GITHUB_OUTPUT
           echo "$APP_OUTPUT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -74,3 +74,29 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           APP_OUTPUT: ${{ steps.check-release.outputs.APP_OUTPUT }}
+
+      - name: Upload APKs to Archive.org
+        if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
+        run: |
+          curl -sL https://archive.org/download/ia-pex/ia > /usr/local/bin/ia
+          chmod +x /usr/local/bin/ia
+
+          # Configure IA CLI with credentials
+          mkdir -p ~/.config/internetarchive
+          echo "[s3]" > ~/.config/internetarchive/ia.ini
+          echo "access=$IA_ACCESS_KEY" >> ~/.config/internetarchive/ia.ini
+          echo "secret=$IA_SECRET_KEY" >> ~/.config/internetarchive/ia.ini
+
+          ITEM_ID="com.roblox.client-${{ steps.check-release.outputs.VERSION_CODE }}"
+          FORMATTED_DATE=$(date -d "${{ steps.check-release.outputs.UPDATED_ON }}" +"%Y-%m-%d")
+          ia upload "$ITEM_ID" ./*.apk \
+            --metadata="collection:open_source_software" \
+            --metadata="mediatype:software" \
+            --metadata="title:Roblox APK ${{ steps.check-release.outputs.VERSION_NAME }}" \
+            --metadata="description:${{ steps.check-release.outputs.APP_OUTPUT }}<br><br>Powered by <a href="https://github.com/Roblox-DeployHistory-Updates/android-runner">Google Play Action Runner</a>" \
+            --metadata="subject:Roblox, APK, Android, Google Play, DeployHistoryUpdates" \
+            --metadata="creator:Roblox" \
+            --metadata="date:$FORMATTED_DATE"
+        env:
+          IA_ACCESS_KEY: ${{ secrets.ARCHIVE_ORG_ACCESS_KEY }}
+          IA_SECRET_KEY: ${{ secrets.ARCHIVE_ORG_SECRET_KEY }}

@@ -24,7 +24,9 @@ function formatDate(dateString) {
     details.match(/version name:\s*(.+)/i)[1].trim(),
     details.match(/version code:\s*(.+)/i)[1].trim(),
     formatDate(details.match(/updated on:\s*(.+)/i)[1].trim()),
-    'Yes'
+    'Yes',
+    '', '', '',
+    'https://archive.org/download/com.roblox.client-' + details.match(/version code:\s*(.+)/i)[1].trim(),
   ]];
 
   await sheets.spreadsheets.values.append({
