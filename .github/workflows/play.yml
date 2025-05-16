@@ -96,7 +96,7 @@ jobs:
             --metadata="mediatype:software" \
             --metadata="title:Roblox APK ${{ steps.check-release.outputs.VERSION_NAME }}" \
             --metadata="description:$FORMATTED_APP_OUTPUT<br><br>Powered by <a href=\"https://github.com/Roblox-DeployHistory-Updates/android-runner\">Google Play Action Runner</a>" \
-            --metadata="subject:Roblox, APK, Android, Google Play, DeployHistoryUpdates" \
+            --metadata="subject:Roblox;APK;Android;Google Play;DeployHistoryUpdates" \
             --metadata="creator:Roblox" \
             --metadata="date:$FORMATTED_DATE"
         env:
