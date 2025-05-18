@@ -1,5 +1,6 @@
 const { google } = require('googleapis');
 const details = process.env.APP_OUTPUT;
+const manifest = JSON.parse(require('fs').readFileSync('manifest.json', 'utf8'));
 
 function formatDate(dateString) {
     const months = {
@@ -25,8 +26,11 @@ function formatDate(dateString) {
     details.match(/version code:\s*(.+)/i)[1].trim(),
     formatDate(details.match(/updated on:\s*(.+)/i)[1].trim()),
     'Yes',
-    '', '', '',
-    'https://archive.org/download/com.roblox.client-' + details.match(/version code:\s*(.+)/i)[1].trim() + '/'
+    manifest.minSdk ? `API ${manifest.minSdk}` : '',
+    manifest.targetSdk ? `API ${manifest.targetSdk}` : '',
+    '',
+    'https://archive.org/download/com.roblox.client-' + details.match(/version code:\s*(.+)/i)[1].trim() + '/',
+    JSON.stringify(manifest)
   ]];
 
   await sheets.spreadsheets.values.append({

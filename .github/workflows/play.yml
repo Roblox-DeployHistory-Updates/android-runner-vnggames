@@ -57,6 +57,18 @@ jobs:
             ./play -a com.roblox.client -p 5 -v $VERSION_CODE
           fi
 
+      - name: Generate metadata
+        if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
+        run: |
+          curl -sL https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool > /usr/local/bin/apktool
+          curl -sL https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.11.1.jar > /usr/local/bin/apktool.jar
+          chmod +x /usr/local/bin/apktool
+          npm install yaml
+          node generate-metadata.js
+        env:
+          VERSION_CODE: ${{ steps.check-release.outputs.VERSION_CODE }}
+          UPDATED_ON: ${{ steps.check-release.outputs.UPDATED_ON }}
+
       - name: Create release and upload APKs
         if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
         uses: ncipollo/release-action@v1
@@ -64,7 +76,7 @@ jobs:
           tag: ${{ steps.check-release.outputs.VERSION_CODE }}
           name: "${{ steps.check-release.outputs.VERSION_NAME }} (${{ steps.check-release.outputs.VERSION_CODE }})"
           body: ${{ steps.check-release.outputs.APP_OUTPUT }}
-          artifacts: ./*.apk
+          artifacts: ./*.apk,manifest.json
 
       - name: Append row to Google Sheet
         if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
@@ -91,7 +103,7 @@ jobs:
           FORMATTED_DATE=$(date -d "${{ steps.check-release.outputs.UPDATED_ON }}" +"%Y-%m-%d")
           FORMATTED_APP_OUTPUT=$(echo "${{ steps.check-release.outputs.APP_OUTPUT }}" | sed ':a;N;$!ba;s/\n/<br>/g')
 
-          ia upload "$ITEM_ID" ./*.apk \
+          ia upload "$ITEM_ID" ./*.apk manifest.json \
             --metadata="collection:open_source_software" \
             --metadata="mediatype:software" \
             --metadata="title:Roblox APK ${{ steps.check-release.outputs.VERSION_NAME }}" \
