@@ -10,7 +10,7 @@ if (!versionCode) {
   process.exit(1);
 }
 
-const apkFile = `com.roblox.client-${versionCode}.apk`;
+const apkFile = `com.roblox.client.vnggames-${versionCode}.apk`;
 if (!fs.existsSync(apkFile)) {
   console.error(`APK file not found: ${apkFile}`);
   process.exit(1);
@@ -69,7 +69,7 @@ try {
     const files = fs.readdirSync(process.cwd());
     files.forEach(f => {
       // Match: com.roblox.client-config.arm64_v8a-1810.apk or com.roblox.client-arm64_v8a.apk
-      const match = f.match(/com\.roblox\.client(?:-config)?[-_\.](arm64_v8a|armeabi_v7a|x86_64|x86|universal)[-_\.]/i);
+      const match = f.match(/com\.roblox\.client\.vnggames(?:-config)?[-_\.](arm64_v8a|armeabi_v7a|x86_64|x86|universal)[-_\.]/i);
       if (match) {
         let arch = match[1].replace('_', '-');
         archSet.add(arch);

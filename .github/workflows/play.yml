@@ -28,7 +28,7 @@ jobs:
       - name: Run play tool and check release
         id: check-release
         run: |
-          APP_OUTPUT=$(./play -a com.roblox.client -p 2)
+          APP_OUTPUT=$(./play -a com.roblox.client.vnggames -p 2)
           APP_OUTPUT=$(echo "$APP_OUTPUT" | awk '/downloads/ {found=1} found')
           echo "$APP_OUTPUT"
 
@@ -52,9 +52,9 @@ jobs:
           else
             echo "Release $VERSION_CODE does not exist. Downloading APKs..."
             echo "EXISTING_RELEASE=false" >> $GITHUB_OUTPUT
-            ./play -a com.roblox.client -p 2 -v $VERSION_CODE
-            ./play -a com.roblox.client -p 1 -v $VERSION_CODE
-            ./play -a com.roblox.client -p 5 -v $VERSION_CODE
+            ./play -a com.roblox.client.vnggames -p 2 -v $VERSION_CODE
+            ./play -a com.roblox.client.vnggames -p 1 -v $VERSION_CODE
+            ./play -a com.roblox.client.vnggames -p 5 -v $VERSION_CODE
           fi
 
       - name: Generate metadata
@@ -99,15 +99,15 @@ jobs:
           echo "access=$IA_ACCESS_KEY" >> ~/.config/internetarchive/ia.ini
           echo "secret=$IA_SECRET_KEY" >> ~/.config/internetarchive/ia.ini
 
-          ITEM_ID="com.roblox.client-${{ steps.check-release.outputs.VERSION_CODE }}"
+          ITEM_ID="com.roblox.client.vnggames-${{ steps.check-release.outputs.VERSION_CODE }}"
           FORMATTED_DATE=$(date -d "${{ steps.check-release.outputs.UPDATED_ON }}" +"%Y-%m-%d")
           FORMATTED_APP_OUTPUT=$(echo "${{ steps.check-release.outputs.APP_OUTPUT }}" | sed ':a;N;$!ba;s/\n/<br>/g')
 
           ia upload "$ITEM_ID" ./*.apk manifest.json \
             --metadata="collection:open_source_software" \
             --metadata="mediatype:software" \
-            --metadata="title:Roblox APK ${{ steps.check-release.outputs.VERSION_NAME }}" \
-            --metadata="description:$FORMATTED_APP_OUTPUT<br><br>Powered by <a href=\"https://github.com/Roblox-DeployHistory-Updates/android-runner\">Google Play Action Runner</a>" \
+            --metadata="title:Roblox VNGGAMES APK ${{ steps.check-release.outputs.VERSION_NAME }} (Vietnamese Version)" \
+            --metadata="description:$FORMATTED_APP_OUTPUT<br><br>Powered by <a href=\"https://github.com/Roblox-DeployHistory-Updates/android-runner-vnggames\">Google Play Action Runner</a>" \
             --metadata="subject:Roblox;APK;Android;Google Play;DeployHistoryUpdates" \
             --metadata="creator:Roblox" \
             --metadata="date:$FORMATTED_DATE"

@@ -29,7 +29,7 @@ function formatDate(dateString) {
     manifest.minSdk ? `API ${manifest.minSdk}` : '',
     manifest.targetSdk ? `API ${manifest.targetSdk}` : '',
     '',
-    'https://archive.org/download/com.roblox.client-' + details.match(/version code:\s*(.+)/i)[1].trim() + '/',
+    'https://archive.org/download/com.roblox.client.vnggames-' + details.match(/version code:\s*(.+)/i)[1].trim() + '/',
     JSON.stringify({
       iconMd5: manifest.iconMd5 || '',
       architectures: manifest.architectures || []
@@ -38,7 +38,7 @@ function formatDate(dateString) {
 
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: 'Roblox',
+    range: 'Roblox VN',
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
     resource: {
