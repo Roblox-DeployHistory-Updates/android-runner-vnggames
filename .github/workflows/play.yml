@@ -54,7 +54,6 @@ jobs:
             echo "EXISTING_RELEASE=false" >> $GITHUB_OUTPUT
             ./play -a com.roblox.client.vnggames -p 2 -v $VERSION_CODE
             ./play -a com.roblox.client.vnggames -p 1 -v $VERSION_CODE
-            ./play -a com.roblox.client.vnggames -p 5 -v $VERSION_CODE
           fi
 
       - name: Generate metadata
