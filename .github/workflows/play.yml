@@ -107,7 +107,7 @@ jobs:
             --metadata="mediatype:software" \
             --metadata="title:Roblox VNGGAMES APK ${{ steps.check-release.outputs.VERSION_NAME }} (Vietnamese Version)" \
             --metadata="description:$FORMATTED_APP_OUTPUT<br><br>Powered by <a href=\"https://github.com/Roblox-DeployHistory-Updates/android-runner-vnggames\">Google Play Action Runner</a>" \
-            --metadata="subject:Roblox;APK;Android;Google Play;DeployHistoryUpdates" \
+            --metadata="subject:Roblox;Roblox VN;VNGGAMES;APK;Android;Google Play;DeployHistoryUpdates" \
             --metadata="creator:Roblox" \
             --metadata="date:$FORMATTED_DATE"
         env:
