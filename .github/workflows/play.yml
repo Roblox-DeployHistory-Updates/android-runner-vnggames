@@ -45,8 +45,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
           # Check if release exists
-          RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$VERSION_CODE"
-          if curl --silent --fail "$RELEASE_URL" > /dev/null; then
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION_CODE" >/dev/null 2>&1; then
             echo "Release $VERSION_CODE already exists."
             echo "EXISTING_RELEASE=true" >> $GITHUB_OUTPUT
           else
