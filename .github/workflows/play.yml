@@ -87,7 +87,7 @@ jobs:
           APP_OUTPUT: ${{ steps.check-release.outputs.APP_OUTPUT }}
 
       - name: Upload APKs to Archive.org
-        if: steps.check-release.outputs.EXISTING_RELEASE != 'true'
+        if: steps.check-release.outputs.EXISTING_RELEASE != 'true' && false
         run: |
           curl -sL https://archive.org/download/ia-pex/ia > /usr/local/bin/ia
           chmod +x /usr/local/bin/ia
